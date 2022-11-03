@@ -35,8 +35,11 @@ pub struct ComputeBudget {
     /// Number of compute units consumed by an invoke call (not including the cost incurred by
     /// the called program)
     pub invoke_units: u64,
-    /// Maximum cross-program invocation depth allowed
-    pub max_invoke_depth: usize,
+    /// Maximum program instruction invocation stack height. Invocation stack
+    /// height starts at 1 for transaction instructions and the stack height is
+    /// incremented each time a program invokes an instruction and decremented
+    /// when a program returns.
+    pub max_invoke_stack_height: usize,
     /// Maximum cross-program invocation and instructions per transaction
     pub max_instruction_trace_length: usize,
     /// Base number of compute units consumed to call SHA256
@@ -45,9 +48,9 @@ pub struct ComputeBudget {
     pub sha256_byte_cost: u64,
     /// Maximum number of slices hashed per syscall
     pub sha256_max_slices: u64,
-    /// Maximum BPF to BPF call depth
+    /// Maximum SBF to BPF call depth
     pub max_call_depth: usize,
-    /// Size of a stack frame in bytes, must match the size specified in the LLVM BPF backend
+    /// Size of a stack frame in bytes, must match the size specified in the LLVM SBF backend
     pub stack_frame_size: usize,
     /// Number of compute units consumed by logging a `Pubkey`
     pub log_pubkey_units: u64,
@@ -113,7 +116,7 @@ impl ComputeBudget {
             log_64_units: 100,
             create_program_address_units: 1500,
             invoke_units: 1000,
-            max_invoke_depth: 4,
+            max_invoke_stack_height: 5,
             max_instruction_trace_length: 64,
             sha256_base_cost: 85,
             sha256_byte_cost: 1,
